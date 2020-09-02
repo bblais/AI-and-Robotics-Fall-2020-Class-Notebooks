@@ -11,13 +11,17 @@ class Turtle(object):
         self.angle=0
         
         self.color='k'
-        
+        self.pensize=1
+
+        self.facecolor='white'
+
         self.pen='down'
         self._reset=True   
         self.fig=None
         self.ax=None
         self.figsize=figsize
         self.data=[]
+        self.texts=[]
         
     def clear(self):
         fig=py.figure(figsize=self.figsize)
@@ -25,6 +29,7 @@ class Turtle(object):
 
         self.fig=fig
         self.ax=ax
+        ax.set_facecolor(self.facecolor)
 
         ax.clear()
         ax.axis('equal')
@@ -40,25 +45,32 @@ class Turtle(object):
         fig=self.fig
         ax=self.ax
         
+        
         dx=length*py.cos(py.radians(self.angle))
         dy=length*py.sin(py.radians(self.angle))
         
         if self.pen=='down':
             ax.plot([self.x,self.x+dx],[self.y,self.y+dy],
                          color=self.color,
-                         linestyle='-')
+                         linestyle='-',linewidth=self.pensize)
             self.data.append([
-                [self.x,self.x+dx],[self.y,self.y+dy],self.color,self.angle,
+                [self.x,self.x+dx],[self.y,self.y+dy],self.color,self.angle,self.pensize,
             ])
         else:
             self.data.append([
-                [self.x,self.x+dx],[self.y,self.y+dy],None,self.angle,
+                [self.x,self.x+dx],[self.y,self.y+dy],None,self.angle,self.pensize,
             ])
             
             
         self.x+=dx
         self.y+=dy
         
+    def setx(self,x):
+        self.goto(x,self.y)
+
+    def sety(self,x):
+        self.goto(self.x,y)
+
     def goto(self,x,y):
         if self._reset:
             self.clear()
@@ -70,13 +82,13 @@ class Turtle(object):
         if self.pen=='down':
             ax.plot([self.x,x],[self.y,y],
                          color=self.color,
-                         linestyle='-')
+                         linestyle='-',linewidth=self.pensize)
             self.data.append([
-                [self.x,x],[self.y,y],self.color,self.angle,
+                [self.x,x],[self.y,y],self.color,self.angle,self.pensize,
             ])
         else:
             self.data.append([
-                [self.x,x],[self.y,y],None,self.angle,
+                [self.x,x],[self.y,y],None,self.angle,self.pensize,
             ])
             
             
@@ -87,18 +99,94 @@ class Turtle(object):
     def backward(self,length):
         self.forward(-self.length)
         
+    def setheading(self,angle):
+        self.angle=angle
+        self.angle=self.angle % 360
+        self.data.append([
+            [self.x,self.x],[self.y,self.y],None,self.angle,self.pensize,
+        ])
+
+    def home(self):
+        self.goto(0,0)
+        self.setheading(0)
+
+    def seth(self,angle):
+        self.setheading(angle)
+
     def right(self,angle):
         self.angle-=angle
         self.angle=self.angle % 360
         self.data.append([
-            [self.x,self.x],[self.y,self.y],None,self.angle,
+            [self.x,self.x],[self.y,self.y],None,self.angle,self.pensize,
         ])
         
     def left(self,angle):
         self.right(-angle)
         
-        
+
+    def circle(self,radius,extent=None,steps=50):
+        R=radius
+        n=steps
+
+        b=(n-2)*180/n  # polygon interior angle
+        a=180-b  # polygon exterior angle
+        L=R*py.cos(py.radians(b/2))  # length of one side
+
+        if not extent is None:  # partial circle
+            n=n*extent//360
+
+        for i in range(n):
+            self.forward(L)
+
+            if radius>0:
+                self.left(a) 
+            else:
+                self.right(a) 
+
+    def position(self):
+        return self.x,self.y
+
+
 _t=Turtle()
+
+def write(txt,**kwargs):
+    py.text(_t.x,_t.y,txt,**kwargs)
+    _t.texts.append( (_t.x,_t.y,txt,kwargs) )
+
+def bgcolor(color):
+    _t.facecolor=color
+
+def isdown():
+    return _t.pen=='down'
+
+def isup():
+    return not _t.pen=='down'
+
+def pos():
+    return _t.position()
+
+def position():
+    return _t.position()
+
+def xcor():
+    return _t.x
+
+def ycor():
+    return _t.y
+
+def heading():
+    return _t.angle
+
+def distance(x,y=None):
+    if not y is None:
+        return py.sqrt((y-_t.y)**2 + (x-_t.x)**2)
+    else:
+        return py.sqrt((x[1]-_t.y)**2 + (x[0]-_t.x)**2)
+
+def pensize(size=None):
+    if not size is None:
+        _t.pensize=size
+    return _t.pensize
 
 def forward(length):
     global _t
@@ -136,26 +224,60 @@ def speed(arg):
 def goto(x,y):
     global _t
     _t.goto(x,y)
-    
-def animate(delay=0.05,figsize=(5,5)):
+
+def circle(radius,extent=None,steps=50):
+    _t.circle(radius,extent,steps)
+
+
+def animate(delay=0.05,skip=1,figsize=(5,5)):
+
+    # delay will be per 100 units
+
     global _t
     from IPython.display import clear_output
     import time
 
-    for i in range(len(_t.data)+1):
-        clear_output(wait=True)
-        fig=py.figure(figsize=_t.figsize)
-        ax = fig.add_subplot(111)
-        ax.clear()
-        ax.axis('equal')
-        ax.axis([-100,100,-100,100])
-        for x,y,c,a in _t.data[:i]:
-            if c is not None:
-                ax.plot(x,y,color=c,linestyle='-')
+    i=0
+    interrupt_count=0
+    while True:
+
+        try:
+
+            clear_output(wait=True)
+            fig=py.figure(figsize=_t.figsize)
+            ax = fig.add_subplot(111)
+            ax.clear()
+            ax.set_facecolor(_t.facecolor)
+            ax.axis('equal')
+            ax.axis([-100,100,-100,100])
             
-        x,y,c,a = _t.data[i-1]            
-        ax.plot([x[1]],[y[1]],'g',marker=(3, 0, a-90),markersize=20,)
-        ax.plot([x[1]+2*py.cos(py.radians(a))],[y[1]+2*py.sin(py.radians(a))],'r.')
-        py.show() 
-        time.sleep(delay)    
-    
+            for x,y,t,k in _t.texts:
+                ax.text(x,y,t,**k)
+
+            for x,y,c,a,ps in _t.data[:i]:
+                if c is not None:
+                    ax.plot(x,y,color=c,linestyle='-',linewidth=ps)
+                
+            x,y,c,a,ps = _t.data[i-1]            
+            ax.plot([x[1]],[y[1]],'g',marker=(3, 0, a-90),markersize=20,)
+            ax.plot([x[1]+2*py.cos(py.radians(a))],[y[1]+2*py.sin(py.radians(a))],'r.')
+            py.show() 
+
+
+            # each step is a delay
+
+            time.sleep(delay)    
+        
+            if i==len(_t.data):
+                break
+
+            i+=skip
+            if i>len(_t.data):  # make sure to plot the last one
+                i=len(_t.data)
+
+        except KeyboardInterrupt:
+            interrupt_count+=1
+            if interrupt_count==1:
+                delay=0
+            else:
+                i=len(_t.data)
