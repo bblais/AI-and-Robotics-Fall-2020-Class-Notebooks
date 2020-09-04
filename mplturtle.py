@@ -65,6 +65,16 @@ class Turtle(object):
         self.x+=dx
         self.y+=dy
         
+        self.adjust_axis()
+
+    def adjust_axis(self):
+
+        limits=self.ax.axis()
+        if self.x<limits[0] or self.x>limits[1] or self.y<limits[2] or self.y>limits[3]:
+            limits=[2*_ for _ in limits]
+            self.ax.axis(limits)
+
+
     def setx(self,x):
         self.goto(x,self.y)
 
@@ -94,7 +104,7 @@ class Turtle(object):
             
         self.x=x
         self.y=y
-        
+        self.adjust_axis()
         
     def backward(self,length):
         self.forward(-self.length)
@@ -206,13 +216,27 @@ def penup():
     global _t
     _t.pen='up'
     
+
 def pendown():
     global _t
     _t.pen='down'    
-    
-def pencolor(color):
+
+up = penup
+down = pendown
+
+
+
+
+def pencolor(*args):
     global _t
+
+    if len(args)==1:
+        color=args[0]
+    else:
+        color=args[:3]
+
     _t.color=color  
+
 
 def reset(*args,**kwargs):
     global _t
@@ -224,6 +248,13 @@ def speed(arg):
 def goto(x,y):
     global _t
     _t.goto(x,y)
+
+
+def sety(y):
+    goto(_t.x,y)
+
+def setx(x):
+    goto(x,_t.y)
 
 def circle(radius,extent=None,steps=50):
     _t.circle(radius,extent,steps)
