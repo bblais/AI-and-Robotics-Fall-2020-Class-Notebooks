@@ -22,6 +22,7 @@ class Turtle(object):
         self.figsize=figsize
         self.data=[]
         self.texts=[]
+        self.limits=[-100,100,-100,100]
         
     def clear(self):
         fig=py.figure(figsize=self.figsize)
@@ -33,7 +34,7 @@ class Turtle(object):
 
         ax.clear()
         ax.axis('equal')
-        ax.axis([-100,100,-100,100])
+        ax.axis(self.limits)
 
         self.data=[]
         
@@ -73,7 +74,7 @@ class Turtle(object):
         if self.x<limits[0] or self.x>limits[1] or self.y<limits[2] or self.y>limits[3]:
             limits=[2*_ for _ in limits]
             self.ax.axis(limits)
-
+            self.limits=limits
 
     def setx(self,x):
         self.goto(x,self.y)
@@ -280,7 +281,7 @@ def animate(delay=0.05,skip=1,figsize=(5,5)):
             ax.clear()
             ax.set_facecolor(_t.facecolor)
             ax.axis('equal')
-            ax.axis([-100,100,-100,100])
+            ax.axis(_t.limits)
             
             for x,y,t,k in _t.texts:
                 ax.text(x,y,t,**k)
