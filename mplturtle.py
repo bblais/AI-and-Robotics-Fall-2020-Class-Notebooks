@@ -160,6 +160,10 @@ class Turtle(object):
 
 _t=Turtle()
 
+
+def done():
+    pass
+
 def write(txt,**kwargs):
     py.text(_t.x,_t.y,txt,**kwargs)
     _t.texts.append( (_t.x,_t.y,txt,kwargs) )
