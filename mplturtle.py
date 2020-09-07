@@ -254,6 +254,8 @@ def goto(x,y):
     global _t
     _t.goto(x,y)
 
+def home():
+    goto(0,0)
 
 def sety(y):
     goto(_t.x,y)
