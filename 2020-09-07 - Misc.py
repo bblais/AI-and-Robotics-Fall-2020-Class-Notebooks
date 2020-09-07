@@ -247,3 +247,116 @@ for loc in [0,1,2,3,6,7,8,12,13,14,15]:
     if check_three_in_a_row(state,player,loc,loc+1,loc+2):
         return "win"
 
+
+# In[44]:
+
+
+prod(board.shape)
+
+
+# In[46]:
+
+
+number_of_rows,number_of_columns=board.shape
+
+
+# In[47]:
+
+
+number_of_rows*number_of_columns
+
+
+# In[48]:
+
+
+number_of_rows
+
+
+# In[51]:
+
+
+moves=[0]
+
+
+# In[52]:
+
+
+moves==[0]
+
+
+# In[ ]:
+
+
+if valid_moves(state,other_player)==[0]:
+    return "win"
+    
+if len(valid_moves(state,other_player))==1:
+    return 'win'
+
+
+# In[53]:
+
+
+def random_move(state,player):
+    possible_moves=valid_moves(state,player)
+    move=random.choice(possible_moves)
+    return move
+
+
+# In[ ]:
+
+
+def not_so_random_move(state,player):
+    possible_moves=valid_moves(state,player)
+    
+    if possible_moves==[0]:
+        return 0
+    
+    while True:
+        move=random.choice(possible_moves)
+        if move!=0:
+            break
+
+    
+    return move
+
+
+# In[ ]:
+
+
+def not_so_random_move(state,player):
+    possible_moves=valid_moves(state,player)
+    
+    possible_moves.remove(0)
+    if possible_moves==[]:
+        return 0
+    
+    move=random.choice(possible_moves)
+
+    
+    return move
+
+
+# In[54]:
+
+
+possible_moves=[0,1,2,3,4]
+
+
+# In[55]:
+
+
+possible_moves.remove(0)
+
+
+# In[56]:
+
+
+possible_moves
+
+
+# In[ ]:
+
+
+
+
