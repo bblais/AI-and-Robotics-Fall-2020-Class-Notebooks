@@ -59,6 +59,16 @@ def human_move(state,player):
 human_agent=Agent(human_move)
 
 
+# In[7]:
+
+
+def random_move(state,player):
+    possible_moves=valid_moves(state,player)
+    move=random.choice(possible_moves)
+    return move
+random_agent=Agent(random_move)
+
+
 # In[6]:
 
 
