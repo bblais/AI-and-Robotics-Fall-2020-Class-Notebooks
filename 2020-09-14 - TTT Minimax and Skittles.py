@@ -219,7 +219,7 @@ SaveTable(skittles_agent.S,"ttt player 1 skittles.json")
 SaveTable(skittles_agent2.S,"ttt player 2 skittles.json")
 
 
-# In[26]:
+# In[ ]:
 
 
 number_of_batches=100
@@ -227,6 +227,7 @@ wins=[]
 losses=[]
 ties=[]
 skittles_agent.S=Table()
+total_number_of_games=0
 for i in range(number_of_batches):
     N=1000
     g=Game(N)
@@ -235,7 +236,8 @@ for i in range(number_of_batches):
     wins.append(sum([r==1 for r in result]))
     losses.append(sum([r==2 for r in result]))
     ties.append(sum([r==0 for r in result]))
-    print(wins[-1],losses[-1],ties[-1])
+    total_number_of_games+=N
+    print("total games ",total_number_of_games,"W L T",wins[-1],losses[-1],ties[-1])
 
 
 # In[ ]:
