@@ -36,7 +36,7 @@ from RobotSim373 import *
 #     3. (others to come)
 # * Robot objects can have a force applied to them, always in the direction they face
 
-# In[4]:
+# In[44]:
 
 
 def build(robot):
@@ -49,7 +49,7 @@ def act(t,robot):
     robot['right'].F=0.4
 
 
-# In[6]:
+# In[45]:
 
 
 env=Environment(24,24)  # size of the environment
@@ -63,7 +63,7 @@ run_sim(env,act,
        )
 
 
-# In[7]:
+# In[48]:
 
 
 def build(robot):
@@ -79,11 +79,17 @@ def build(robot):
     
     
 def act(t,robot):
-    robot['right'].F=0.4
-    robot['left'].F=0.2
+    
+    if t<10:
+        robot['right'].F=0.4
+        robot['left'].F=0.2
+    else:
+        robot['right'].F=-0.4
+        robot['left'].F=-0.2
+        
 
 
-# In[10]:
+# In[49]:
 
 
 env=Environment(24,24)  # size of the environment
@@ -119,7 +125,7 @@ def act(t,robot):
     robot['left'].F=0.4
 
 
-# In[24]:
+# In[43]:
 
 
 env=Environment(24,24)  # size of the environment
@@ -147,19 +153,19 @@ run_sim(env,act,
        )
 
 
-# In[34]:
+# In[41]:
 
 
 def build(robot):
     box1=Box(robot,
              x=3,
              y=4,
-             name='right')   # default size is 1,1
+             name='bob')   # default size is 1,1
 
     box2=Box(robot,
              x=3,
              y=6,
-             name='left')   # default size is 1,1
+             name='sally')   # default size is 1,1
     
     circle=Disk(robot,
                x=2,
@@ -171,11 +177,11 @@ def build(robot):
     connect(box1,circle,'weld')
     
 def act(t,robot):
-    robot['right'].F=0.4
-    robot['left'].F=0.4
+    robot['sally'].F=0.4
+    robot['bob'].F=0.4
 
 
-# In[36]:
+# In[42]:
 
 
 env=Environment(24,24)  # size of the environment
@@ -223,6 +229,30 @@ Box(env,
     width=4,
     height=0.1,
     angle=30,)
+
+
+run_sim(env,act,
+        total_time=60,  # seconds
+        dt=1/60,
+        dt_display=0.5,  # make this larger for a faster display
+       )
+
+
+# In[40]:
+
+
+env=Environment(24,24)  # size of the environment
+robot=Robot(env)
+build(robot)
+
+for j in range(10):
+    for i in range(10):
+        Disk(env,
+            x=10+j,
+            y=1+0.5*i,
+            radius=.2,
+            density=0.01)
+
 
 
 run_sim(env,act,
