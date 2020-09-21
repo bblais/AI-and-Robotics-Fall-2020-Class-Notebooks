@@ -1,0 +1,12 @@
+﻿Name,Feedback Code,Sprint,Status
+Make sure that minimax works for your game,c1,Sprint #2,
+Determine how minimax scales with search size,,Sprint #2,
+Learn Simple Skittles Reinforcement Learning,c2,Sprint #2,
+Learn Q-Learning,,Sprint #2,
+Implement Skittles Agent for your game,,Sprint #2,
+Implement Q-learning for your game,,Sprint #2,
+Set Up Robot Simulator,,Sprint #2,
+"Make python functions for simple motor tasks (e.g. moving forward a given distance, turning right 90 degrees, etc...)",,Sprint #2,
+Learn to have the robot take pictures and convey the images to your notebook,,Sprint #2,
+Look through all of the example robot scripts and summarize what they do,,Sprint #2,
+Make your robot do something interesting,,Sprint #2,
