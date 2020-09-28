@@ -134,7 +134,7 @@ skittles_agent.S=Table()
 skittles_agent.post=skittles_after
 
 
-# In[9]:
+# In[18]:
 
 
 def Q_move(state,player,info):
@@ -199,7 +199,6 @@ def Q_after(status,player,info):
     # learn a little bit
     Q[last_state][last_action] += α*(reward-Q[last_state][last_action])
         
-    
 
 
 Q_agent=Agent(Q_move)
@@ -211,7 +210,19 @@ Q_agent.γ=0.9  # memory constant, discount factor
 Q_agent.ϵ=0.1  # probability of a random move during learning
 
 
-# In[ ]:
+# ## Traning stage
+# 
+# - the Q values can change
+# - that the agent takes random moves sometimes
+
+# In[26]:
+
+
+Q_agent.α=0.3  # learning rate
+Q_agent.ϵ=0.1  # probability of a random move during learning
+
+
+# In[27]:
 
 
 g=Game(100)
@@ -219,19 +230,39 @@ g.display=False
 g.run(minimax_agent,Q_agent);
 
 
-# In[ ]:
+# ## Testing stage
+# 
+# - the Q values **do not change**
+# - that the agent **never takes random moves**
+
+# In[28]:
+
+
+Q_agent.α=0.0  # learning rate
+Q_agent.ϵ=0.0  # probability of a random move during learning
+
+
+# In[29]:
+
+
+g=Game(10)
+g.display=False
+g.run(minimax_agent,Q_agent);
+
+
+# In[30]:
 
 
 g.report()
 
 
-# In[ ]:
+# In[31]:
 
 
 Q_agent.Q
 
 
-# In[ ]:
+# In[32]:
 
 
 SaveTable(Q_agent.Q,'Q_data.json')
@@ -241,6 +272,76 @@ SaveTable(Q_agent.Q,'Q_data.json')
 
 
 
+
+
+# ## Q vs Q with progress
+
+# In[44]:
+
+
+Q1_agent=Agent(Q_move)
+Q1_agent.Q=LoadTable('Q1_data.json')
+Q1_agent.post=Q_after
+
+Q1_agent.α=0.3  # learning rate
+Q1_agent.γ=0.9  # memory constant, discount factor
+Q1_agent.ϵ=0.1  # probability of a random move during learning
+
+Q2_agent=Agent(Q_move)
+Q2_agent.Q=LoadTable('Q2_data.json')
+Q2_agent.post=Q_after
+
+Q2_agent.α=0.3  # learning rate
+Q2_agent.γ=0.9  # memory constant, discount factor
+Q2_agent.ϵ=0.1  # probability of a random move during learning
+
+
+# In[45]:
+
+
+for epoch in range(100):
+    
+    number_training_games=10
+    number_of_testing_games=10
+    
+    #=================
+    # traning cycle
+    Q1_agent.α=0.3  # learning rate
+    Q1_agent.ϵ=0.1  # probability of a random move during learning
+    Q2_agent.α=0.3  # learning rate
+    Q2_agent.ϵ=0.1  # probability of a random move during learning
+    
+    g=Game(number_training_games)
+    g.display=False
+    g.run(Q1_agent,Q2_agent)
+
+    #=================
+    # testing cycle
+    Q1_agent.α=0.0  # learning rate
+    Q1_agent.ϵ=0.0  # probability of a random move during learning
+    Q2_agent.α=0.0  # learning rate
+    Q2_agent.ϵ=0.0  # probability of a random move during learning
+    
+    
+    g=Game(number_of_testing_games)
+    g.display=False
+    result=g.run(Q1_agent,Q2_agent)
+    
+    win_percentage=sum([r==1 for r in result])/number_training_games*100
+    loss_percentage=sum([r==2 for r in result])/number_training_games*100
+    tie_percentage=sum([r==0 for r in result])/number_training_games*100
+
+    print(win_percentage," ",end="")
+    
+    SaveTable(Q1_agent.Q,'Q1_data.json')
+    SaveTable(Q2_agent.Q,'Q2_data.json')    
+    
+
+
+# In[41]:
+
+
+sum([r==2 for r in result])/number_training_games*100
 
 
 # In[ ]:
