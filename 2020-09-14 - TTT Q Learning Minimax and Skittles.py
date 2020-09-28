@@ -7,53 +7,90 @@
 from Game import *
 
 
-# # Nim
-# 
-# Rules:
-# 
-# 1. start with 21 sticks -- state = number of sticks
-# 2. turns alternate taking 1,2, or 3 sticks
-# 3. player taking last stick loses
+# ## Rules of the Game
 
 # In[2]:
 
 
 def initial_state():
-    return 21
+    board=Board(3,3)
+    board.pieces=['.','X','O']
+    return board
 
 def show_state(state):
-    print("There are ",state,"sticks.")
+    print(state)
     
-def valid_moves(state,player):
-    if state==1:
-        return [1]
-    elif state==2:
-        return [1,2]
-    else:
-        return [1,2,3]
+def valid_moves(state,player):  # returns a list of all of the possible moves given a state
+    moves=[]
+    
+    for i in range(9):
+        if state[i]==0:
+            moves.append(i)
+    
+    return moves
     
 def update_state(state,player,move):
-    # move = number of sticks to pick up
-    new_state=state-move # remove the sticks
+    
+    new_state=state
+    state[move]=player
+    
     return new_state
 
 def win_status(state,player):
-    if state==0:
-        return 'lose'
-    elif state==1:
-        return 'win'
-    else:
-        return None
+    # "win" if the player wins
+    # "lose" if the player loses
+    # "stalemate" if a tie
+    # None if the game continues
     
-    # there is no stalemate
+    # 0 1 2
+    # 3 4 5
+    # 6 7 8
+    
+    if state[0]==player and state[1]==player and state[2]==player:
+        return "win"
+    if state[3]==player and state[4]==player and state[5]==player:
+        return "win"
+    if state[6]==player and state[7]==player and state[8]==player:
+        return "win"
+    if state[0]==player and state[3]==player and state[6]==player:
+        return "win"
+    if state[1]==player and state[4]==player and state[7]==player:
+        return "win"
+    if state[2]==player and state[5]==player and state[8]==player:
+        return "win"
+    if state[0]==player and state[4]==player and state[8]==player:
+        return "win"
+    if state[6]==player and state[4]==player and state[2]==player:
+        return "win"
+    
+    if player==1:
+        other_player=2
+    else:
+        other_player=1
+        
+        
+    if not valid_moves(state,other_player):
+        return "stalemate"
+    
+    
+    return None
+    
 
+
+# ## Agents
 
 # In[3]:
 
 
 def human_move(state,player):
-    print("Player ",player)
-    move=int(input("How many sticks?"))
+    print("""
+     0 1 2
+     3 4 5
+     6 7 8
+    """)
+    
+    move=int(input("What move?"))
+    
     return move
 
 human_agent=Agent(human_move)
@@ -66,10 +103,12 @@ def random_move(state,player):
     possible_moves=valid_moves(state,player)
     move=random.choice(possible_moves)
     return move
+
+
 random_agent=Agent(random_move)
 
 
-# In[5]:
+# In[12]:
 
 
 from Game.minimax import *
@@ -134,7 +173,12 @@ skittles_agent.S=Table()
 skittles_agent.post=skittles_after
 
 
-# In[18]:
+skittles_agent2=Agent(skittles_move)
+skittles_agent2.S=Table()
+skittles_agent2.post=skittles_after
+
+
+# In[7]:
 
 
 def Q_move(state,player,info):
@@ -201,86 +245,11 @@ def Q_after(status,player,info):
         
 
 
-Q_agent=Agent(Q_move)
-Q_agent.Q=LoadTable('Q_data.json')
-Q_agent.post=Q_after
-
-Q_agent.α=0.3  # learning rate
-Q_agent.γ=0.9  # memory constant, discount factor
-Q_agent.ϵ=0.1  # probability of a random move during learning
-
-
-# ## Traning stage
-# 
-# - the Q values can change
-# - that the agent takes random moves sometimes
-
-# In[26]:
-
-
-Q_agent.α=0.3  # learning rate
-Q_agent.ϵ=0.1  # probability of a random move during learning
-
-
-# In[27]:
-
-
-g=Game(100)
-g.display=False
-g.run(minimax_agent,Q_agent);
-
-
-# ## Testing stage
-# 
-# - the Q values **do not change**
-# - that the agent **never takes random moves**
-
-# In[28]:
-
-
-Q_agent.α=0.0  # learning rate
-Q_agent.ϵ=0.0  # probability of a random move during learning
-
-
-# In[29]:
-
-
-g=Game(10)
-g.display=False
-g.run(minimax_agent,Q_agent);
-
-
-# In[30]:
-
-
-g.report()
-
-
-# In[31]:
-
-
-Q_agent.Q
-
-
-# In[32]:
-
-
-SaveTable(Q_agent.Q,'Q_data.json')
-
-
-# In[ ]:
-
-
-
-
-
-# ## Q vs Q with progress
-
-# In[49]:
+# In[8]:
 
 
 Q1_agent=Agent(Q_move)
-Q1_agent.Q=LoadTable('Q1_data.json')
+Q1_agent.Q=LoadTable('Q1_TTT_data.json')
 Q1_agent.post=Q_after
 
 Q1_agent.α=0.3  # learning rate
@@ -288,7 +257,7 @@ Q1_agent.γ=0.9  # memory constant, discount factor
 Q1_agent.ϵ=0.1  # probability of a random move during learning
 
 Q2_agent=Agent(Q_move)
-Q2_agent.Q=LoadTable('Q2_data.json')
+Q2_agent.Q=LoadTable('Q2_TTT_data.json')
 Q2_agent.post=Q_after
 
 Q2_agent.α=0.3  # learning rate
@@ -296,7 +265,7 @@ Q2_agent.γ=0.9  # memory constant, discount factor
 Q2_agent.ϵ=0.1  # probability of a random move during learning
 
 
-# In[50]:
+# In[9]:
 
 
 total_number_of_games=0
@@ -335,9 +304,37 @@ for epoch in range(100):
 
     print(total_number_of_games,":",win_percentage," ",end="")
     
-    SaveTable(Q1_agent.Q,'Q1_data.json')
-    SaveTable(Q2_agent.Q,'Q2_data.json')    
+    SaveTable(Q1_agent.Q,'Q1_TTT_data.json')
+    SaveTable(Q2_agent.Q,'Q2_TTT_data.json')    
     
+
+
+# In[10]:
+
+
+g=Game(number_of_testing_games)
+g.display=False
+result=g.run(minimax_agent,Q2_agent)
+
+
+# In[11]:
+
+
+g.report()
+
+
+# In[13]:
+
+
+g=Game(number_of_testing_games)
+g.display=False
+result=g.run(Q1_agent,minimax_agent)
+
+
+# In[14]:
+
+
+g.report()
 
 
 # In[ ]:
