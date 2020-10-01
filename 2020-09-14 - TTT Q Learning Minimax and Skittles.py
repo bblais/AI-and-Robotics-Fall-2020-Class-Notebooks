@@ -245,7 +245,7 @@ def Q_after(status,player,info):
         
 
 
-# In[8]:
+# In[15]:
 
 
 Q1_agent=Agent(Q_move)
@@ -265,13 +265,13 @@ Q2_agent.γ=0.9  # memory constant, discount factor
 Q2_agent.ϵ=0.1  # probability of a random move during learning
 
 
-# In[9]:
+# In[23]:
 
 
 total_number_of_games=0
 for epoch in range(100):
     
-    number_training_games=10
+    number_training_games=1000
     number_of_testing_games=10
     
     #=================
@@ -309,7 +309,7 @@ for epoch in range(100):
     
 
 
-# In[10]:
+# In[24]:
 
 
 g=Game(number_of_testing_games)
@@ -317,13 +317,13 @@ g.display=False
 result=g.run(minimax_agent,Q2_agent)
 
 
-# In[11]:
+# In[25]:
 
 
 g.report()
 
 
-# In[13]:
+# In[26]:
 
 
 g=Game(number_of_testing_games)
@@ -331,10 +331,88 @@ g.display=False
 result=g.run(Q1_agent,minimax_agent)
 
 
-# In[14]:
+# In[27]:
 
 
 g.report()
+
+
+# ## After 100,000 games, 
+# 
+# 1. ties 100% with minimax
+# 2. I defeated it with the game below:
+# 
+#     Game  1
+#      .  .  . 
+#      .  .  . 
+#      .  .  . 
+# 
+# 
+#          0 1 2
+#          3 4 5
+#          6 7 8
+# 
+#     What move? 4
+#     Player 1 moves 4
+#      .  .  . 
+#      .  X  . 
+#      .  .  . 
+# 
+#     Player 2 moves 0
+#      O  .  . 
+#      .  X  . 
+#      .  .  . 
+# 
+# 
+#          0 1 2
+#          3 4 5
+#          6 7 8
+# 
+#     What move? 1
+#     Player 1 moves 1
+#      O  X  . 
+#      .  X  . 
+#      .  .  . 
+# 
+#     Player 2 moves 7
+#      O  X  . 
+#      .  X  . 
+#      .  O  . 
+# 
+# 
+#          0 1 2
+#          3 4 5
+#          6 7 8
+# 
+#     What move? 6
+#     Player 1 moves 6
+#      O  X  . 
+#      .  X  . 
+#      X  O  . 
+# 
+#     Player 2 moves 3
+#      O  X  . 
+#      O  X  . 
+#      X  O  . 
+# 
+# 
+#          0 1 2
+#          3 4 5
+#          6 7 8
+# 
+#     What move? 2
+#     Player 1 moves 2
+#      O  X  X 
+#      O  X  . 
+#      X  O  . 
+# 
+#     Player  1 won.
+
+# In[28]:
+
+
+g=Game(1)
+result=g.run(human_agent,Q2_agent)
 
 
 # In[ ]:
