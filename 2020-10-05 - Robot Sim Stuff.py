@@ -240,6 +240,7 @@ def turn_90_degrees(t,robot):
     
     if value:  # done with this action
         robot.current_action+=1
+        robot.start_time=t
         
 
     robot.storage+=t,robot['left'].read_distance()
