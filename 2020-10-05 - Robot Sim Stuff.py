@@ -399,7 +399,7 @@ def act(t,robot):
     robot['box9'].F=10
 
 
-# In[85]:
+# In[90]:
 
 
 def turn_a_bit(t,robot):
@@ -412,7 +412,11 @@ def turn_a_bit(t,robot):
     else:
         return True        #  done with this behavior
     
-    
+def turn_forces_on(t,robot):
+    robot['box9'].F=-10
+    robot['box0'].F=10
+    return True        #  done with this behavior
+
 def turn_to_min_distance(t,robot):
     robot.message = 'min distance'
     
@@ -432,18 +436,29 @@ def stop(t,robot):
     
     return False  # never done
     
+    
+def continue_for_time(time_interval):
+    
+    def _act(t,robot):
+        robot.message='continue for time'
+        if t<time_interval:
+            return False
+        else:
+            return True
+        
+    return _act
 
 def turn_90_degrees(t,robot):
     
-    actions=[turn_a_bit,turn_to_min_distance,stop]
+    actions=[turn_forces_on,continue_for_time(0.3),turn_to_min_distance,continue_for_time(0.1),stop]
     
     if t==0.0:  # first time
         robot.current_action=0
         robot.start_time=0.0
         
-    action=actions[robot.current_action]
+    action_function=actions[robot.current_action]
     
-    value=action(t-robot.start_time,robot)
+    value=action_function(t-robot.start_time,robot)
     
     if value:  # done with this action
         robot.current_action+=1
@@ -477,10 +492,121 @@ t,d=robot.storage.arrays()
 plot(t,d)
 
 
-# In[87]:
+# # How to do a looped action in a sequence
+
+# In[91]:
 
 
-d
+def build(robot):    
+    
+    left=Box(robot,2,12,width=1,height=1,name='left')
+    right=Box(robot,2,10,width=1,height=1,name='right')
+    
+    connect(left,right,'weld')  # revolves around the middle of the second object
+
+
+# In[98]:
+
+
+def turn_a_bit(t,robot):
+    
+    robot.message = 'turn'
+    if t<0.9:
+        robot['left'].F=-10
+        robot['right'].F=10
+        return False        # not done yet!
+    else:
+        return True        #  done with this behavior
+    
+def continue_for_time(time_interval):
+    
+    def _act(t,robot):
+        if t<time_interval:
+            return False
+        else:
+            return True
+        
+    return _act
+
+def turn_on_forward(t,robot):
+    robot.message='on'
+    robot['left'].F=10
+    robot['right'].F=10
+    return True
+    
+def turn_off_forward(t,robot):
+    robot.message='off'
+    robot['left'].F=0
+    robot['right'].F=0
+    return True
+    
+def turn_to_min_distance(t,robot):
+    robot.message = 'min distance'
+    
+    d=robot['left'].read_distance()
+    if d<robot.last_distance:
+        robot['left'].F=-10
+        robot['right'].F=10
+        robot.last_distance=d
+        return False
+    else:
+        return True
+    
+def stop(t,robot):
+    robot.message = 'stop'
+    robot['left'].F=0
+    robot['right'].F=0
+    
+    return False  # never done
+    
+
+def turn_90_degrees(t,robot):
+    
+    actions=[turn_a_bit,turn_to_min_distance,
+             [turn_on_forward,continue_for_time(1),
+              turn_off_forward,continue_for_time(3),
+             ]]
+    
+    if t==0.0:  # first time
+        robot.current_action=0
+        robot.current_subaction=0
+        robot.start_time=0.0
+        
+    action_function=actions[robot.current_action]
+    if isinstance(action_function,list):
+        action_subfunction=action_function[robot.current_subaction]
+        value=action_subfunction(t-robot.start_time,robot)
+    else:
+        value=action_function(t-robot.start_time,robot)
+    
+    if value:  # done with this action
+        if isinstance(action_function,list):  # a looped behavior
+            robot.current_subaction+=1
+            if robot.current_subaction>=len(action_function):
+                robot.current_subaction=0
+        else:
+            robot.current_action+=1
+            
+        robot.start_time=t
+        
+
+    robot.storage+=t,robot['left'].read_distance()
+
+    
+env=Environment(image='images/linepath1.jpeg',linearDamping=20) 
+robot=Robot(env)
+
+build(robot)
+robot.storage=Storage()
+robot.last_distance=500
+
+run_sim(env,turn_90_degrees,
+        total_time=25,  # seconds
+        dt=1/60,
+        dt_display=.5,  # make this larger for a faster display
+        figure_width=8,
+        plot_orientation=False,
+       )    
 
 
 # In[ ]:
