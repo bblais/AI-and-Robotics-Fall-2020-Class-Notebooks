@@ -7,13 +7,13 @@
 get_ipython().magic('pylab inline')
 
 
-# In[2]:
+# In[60]:
 
 
 from RobotSim373 import *
 
 
-# In[3]:
+# In[61]:
 
 
 def build(robot):    
@@ -30,7 +30,7 @@ def build(robot):
     
 
 
-# In[10]:
+# In[62]:
 
 
 def act(t,robot):
@@ -38,7 +38,7 @@ def act(t,robot):
     return
 
 
-# In[42]:
+# In[68]:
 
 
 env=Environment(image='images/TTT Board.png',linearDamping=10) 
@@ -66,7 +66,7 @@ run_sim(env,act,
        )
 
 
-# In[43]:
+# In[69]:
 
 
 def move_to_location(move):
@@ -78,13 +78,13 @@ def move_to_location(move):
     return x,y
 
 
-# In[44]:
+# In[70]:
 
 
 move_to_location(2)
 
 
-# In[45]:
+# In[71]:
 
 
 def move(piece,location):
@@ -107,7 +107,7 @@ def move(piece,location):
         
 
 
-# In[46]:
+# In[72]:
 
 
 
@@ -120,7 +120,7 @@ run_sim(env,move(pieces[0],move_to_location(2)),
        )
 
 
-# In[47]:
+# In[73]:
 
 
 
@@ -135,7 +135,7 @@ run_sim(env,move(pieces[4],move_to_location(4)),
 
 # ## try with setting the location (making a new object in the act function)
 
-# In[52]:
+# In[74]:
 
 
 def set_piece(location,player):
@@ -156,7 +156,7 @@ def act(t,robot):
     return
 
 
-# In[57]:
+# In[75]:
 
 
 env=Environment(image='images/TTT Board.png',linearDamping=10) 
@@ -174,7 +174,7 @@ run_sim(env,act,
        )
 
 
-# In[58]:
+# In[76]:
 
 
 
@@ -187,7 +187,7 @@ run_sim(env,set_piece(move_to_location(4),2),
        )
 
 
-# In[59]:
+# In[79]:
 
 
 run_sim(env,set_piece(move_to_location(1),1),
