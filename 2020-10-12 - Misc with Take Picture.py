@@ -1,19 +1,19 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[2]:
+# In[1]:
 
 
 get_ipython().magic('pylab inline')
 
 
-# In[3]:
+# In[2]:
 
 
 from RobotSim373 import *
 
 
-# In[4]:
+# In[3]:
 
 
 def build(robot):    
@@ -30,7 +30,7 @@ def build(robot):
     
 
 
-# In[5]:
+# In[4]:
 
 
 def act(t,robot):
@@ -143,7 +143,7 @@ run_sim(env,act,
 # # Outline for Robot Game Playing
 
 # 1. **Look at the board (take a picture of the current set-up)**
-# 2. image to state conversion
+# 2. image to state conversion (**Sprint #4**)
 #     - look at colors
 #     - slice the image up into section
 # 4. **have the agent determine the move (state,player) -- from valid_moves.**  
@@ -166,7 +166,53 @@ def make_move(state,player,move):
 
 
 
-# In[16]:
+# In[5]:
+
+
+def act(t,robot):
+    
+    if t>=robot.time_to_next_decision:  # new force
+        robot.current_force=random.rand()*30
+        robot.current_force_angle=random.rand()*360
+        robot.time_to_next_decision=t+2.0  
+
+    robot['left'].F=robot.current_force
+    robot['right'].F=robot.current_force
+    robot['left'].F_angle=robot.current_force_angle
+    robot['right'].F_angle=robot.current_force_angle
+    
+        
+
+
+# In[7]:
+
+
+env=Environment(image='images/linepath1.jpeg',linearDamping=10) 
+robot=Robot(env)
+
+build(robot)
+
+for i in range(300):
+    b=Box(env,x=rand()*24,y=rand()*24,
+          width=0.5,height=0.5,color='r')
+
+
+run_sim(env,act,
+        total_time=30,  # seconds
+        dt=1/60,
+        dt_display=.5,  # make this larger for a faster display
+        figure_width=8,
+        plot_orientation=False,
+       )
+
+
+# In[ ]:
+
+
+
+
+
+# In[10]:
 
 
 colors=['r','b','c','m','y']
@@ -181,18 +227,12 @@ for i in range(300):
 
 
 run_sim(env,act,
-        total_time=30,  # seconds
+        total_time=300,  # seconds
         dt=1/60,
-        dt_display=.5,  # make this larger for a faster display
+        dt_display=1,  # make this larger for a faster display
         figure_width=8,
         plot_orientation=False,
        )
-
-
-# In[15]:
-
-
-get_ipython().magic('pinfo plot')
 
 
 # In[ ]:
