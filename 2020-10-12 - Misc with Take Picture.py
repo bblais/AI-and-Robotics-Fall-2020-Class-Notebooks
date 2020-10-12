@@ -127,8 +127,28 @@ run_sim(env,act,
        )
 
 
+# # Outline for Robot Game Playing
+
+# 1. **Look at the board (take a picture of the current set-up)**
+# 2. image to state conversion
+#     - look at colors
+#     - slice the image up into section
+# 4. **have the agent determine the move (state,player) -- from valid_moves.**  
+#     - e.g. random, minimax, etc...
+# 5. move is a number, or a pair of numbers.   move to motion conversion.
+#     - locations of the piece
+#     - robot needs to get where it is, where to go
+# 6. **execute that motion**
+# 7. go to a start position.  wait for the other player.
+
 # In[ ]:
 
 
+def read_state():
+    return state
+
+def make_move(state,player,move):
+    
+    # generates the motion commands for the robot
 
 
