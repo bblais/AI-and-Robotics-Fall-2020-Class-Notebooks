@@ -309,39 +309,43 @@ Q2_agent.ϵ=0.1  # probability of a random move during learning
 total_number_of_games=0
 for epoch in range(100):
     
-    number_training_games=1000
-    number_of_testing_games=10
-    
-    #=================
-    # traning cycle
-    Q1_agent.α=0.3  # learning rate
-    Q1_agent.ϵ=0.1  # probability of a random move during learning
-    Q2_agent.α=0.3  # learning rate
-    Q2_agent.ϵ=0.1  # probability of a random move during learning
-    
-    g=Game(number_training_games)
-    g.display=False
-    g.run(Q1_agent,Q2_agent)
+    try:
+        number_training_games=1000
+        number_of_testing_games=10
 
-    #=================
-    # testing cycle
-    Q1_agent.α=0.0  # learning rate
-    Q1_agent.ϵ=0.0  # probability of a random move during learning
-    Q2_agent.α=0.0  # learning rate
-    Q2_agent.ϵ=0.0  # probability of a random move during learning
-    
-    
-    g=Game(number_of_testing_games)
-    g.display=False
-    result=g.run(Q1_agent,Q2_agent)
-    
-    total_number_of_games+=number_training_games
-    win_percentage=sum([r==1 for r in result])/number_training_games*100
-    loss_percentage=sum([r==2 for r in result])/number_training_games*100
-    tie_percentage=sum([r==0 for r in result])/number_training_games*100
+        #=================
+        # traning cycle
+        Q1_agent.α=0.3  # learning rate
+        Q1_agent.ϵ=0.1  # probability of a random move during learning
+        Q2_agent.α=0.3  # learning rate
+        Q2_agent.ϵ=0.1  # probability of a random move during learning
 
-    print(total_number_of_games,":",win_percentage," ",end="")
-    
+        g=Game(number_training_games)
+        g.display=False
+        g.run(Q1_agent,Q2_agent)
+
+        #=================
+        # testing cycle
+        Q1_agent.α=0.0  # learning rate
+        Q1_agent.ϵ=0.0  # probability of a random move during learning
+        Q2_agent.α=0.0  # learning rate
+        Q2_agent.ϵ=0.0  # probability of a random move during learning
+
+
+        g=Game(number_of_testing_games)
+        g.display=False
+        result=g.run(Q1_agent,Q2_agent)
+
+        total_number_of_games+=number_training_games
+        win_percentage=sum([r==1 for r in result])/number_training_games*100
+        loss_percentage=sum([r==2 for r in result])/number_training_games*100
+        tie_percentage=sum([r==0 for r in result])/number_training_games*100
+
+        print(total_number_of_games,":",win_percentage," ",end="")
+    except KeyboardInterrupt:
+        
+        pass
+
     SaveTable(Q1_agent.Q,'Q1_Pig_data.json')
     SaveTable(Q2_agent.Q,'Q2_Pig_data.json')    
     
