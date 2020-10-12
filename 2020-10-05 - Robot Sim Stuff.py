@@ -4,7 +4,7 @@
 # In[1]:
 
 
-get_ipython().run_line_magic('pylab', 'inline')
+get_ipython().magic('pylab inline')
 
 
 # In[2]:
