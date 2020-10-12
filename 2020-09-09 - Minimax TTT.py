@@ -126,6 +126,7 @@ random_agent=Agent(random_move)
 
 
 
+
 # In[ ]:
 
 
@@ -338,6 +339,7 @@ g.report()
 
 
 # In[ ]:
+
 
 
 

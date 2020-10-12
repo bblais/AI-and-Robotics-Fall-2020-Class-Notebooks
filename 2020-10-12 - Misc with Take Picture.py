@@ -1,19 +1,19 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[2]:
 
 
 get_ipython().magic('pylab inline')
 
 
-# In[2]:
+# In[3]:
 
 
 from RobotSim373 import *
 
 
-# In[10]:
+# In[4]:
 
 
 def build(robot):    
@@ -30,7 +30,7 @@ def build(robot):
     
 
 
-# In[14]:
+# In[5]:
 
 
 def act(t,robot):
@@ -67,7 +67,7 @@ def act(t,robot):
 # 4. otherwise (t>time to the next decision:
 #     - repeat 1.
 
-# In[15]:
+# In[6]:
 
 
 env=Environment(image='images/linepath1.jpeg',linearDamping=10) 
@@ -86,13 +86,13 @@ run_sim(env,act,
 
 # # take picture
 
-# In[24]:
+# In[12]:
 
 
 def act(t,robot):
     
     if t>=robot.time_to_next_decision:  # new force
-        robot.current_force=random.rand()*10
+        robot.current_force=random.rand()*30
         robot.current_force_angle=random.rand()*360
         robot.time_to_next_decision=t+2.0  
         robot.take_picture('test %.1f.jpg' % t)
@@ -105,7 +105,7 @@ def act(t,robot):
         
 
 
-# In[25]:
+# In[13]:
 
 
 env=Environment(image='images/linepath1.jpeg',linearDamping=10) 
@@ -118,6 +118,19 @@ for i in range(300):
           width=0.5,height=0.5)
 
 
+run_sim(env,act,
+        total_time=30,  # seconds
+        dt=1/60,
+        dt_display=.5,  # make this larger for a faster display
+        figure_width=8,
+        plot_orientation=False,
+       )
+
+
+# In[14]:
+
+
+robot.time_to_next_decision=0
 run_sim(env,act,
         total_time=30,  # seconds
         dt=1/60,
@@ -150,5 +163,40 @@ def read_state():
 def make_move(state,player,move):
     
     # generates the motion commands for the robot
+
+
+
+# In[16]:
+
+
+colors=['r','b','c','m','y']
+env=Environment(image='images/linepath1.jpeg',linearDamping=10) 
+robot=Robot(env)
+
+build(robot)
+
+for i in range(300):
+    b=Box(env,x=rand()*24,y=rand()*24,
+          width=0.5,height=0.5,color=random.choice(colors))
+
+
+run_sim(env,act,
+        total_time=30,  # seconds
+        dt=1/60,
+        dt_display=.5,  # make this larger for a faster display
+        figure_width=8,
+        plot_orientation=False,
+       )
+
+
+# In[15]:
+
+
+get_ipython().magic('pinfo plot')
+
+
+# In[ ]:
+
+
 
 
