@@ -133,6 +133,72 @@ run_sim(env,move(pieces[4],move_to_location(4)),
        )
 
 
+# ## try with setting the location (making a new object in the act function)
+
+# In[52]:
+
+
+def set_piece(location,player):
+    
+    def act(t,robot):
+        
+        if t==0.0:
+            colors=['b','r']
+            tx,ty=location
+            Box(robot.env,x=tx,y=ty,width=0.5,height=0.5,color=colors[player-1])
+        
+            robot.message="Player %d at %.1f,%.1f" % (player,tx,ty)
+            
+    return act
+
+def act(t,robot):
+    
+    return
+
+
+# In[57]:
+
+
+env=Environment(image='images/TTT Board.png',linearDamping=10) 
+robot=Robot(env)
+
+build(robot)
+
+
+run_sim(env,act,
+        total_time=10,  # seconds
+        dt=1/60,
+        dt_display=.5,  # make this larger for a faster display
+        figure_width=8,
+        plot_orientation=False,
+       )
+
+
+# In[58]:
+
+
+
+run_sim(env,set_piece(move_to_location(4),2),
+        total_time=1,  # seconds
+        dt=1/60,
+        dt_display=.5,  # make this larger for a faster display
+        figure_width=8,
+        plot_orientation=False,
+       )
+
+
+# In[59]:
+
+
+run_sim(env,set_piece(move_to_location(1),1),
+        total_time=1,  # seconds
+        dt=1/60,
+        dt_display=.5,  # make this larger for a faster display
+        figure_width=8,
+        plot_orientation=False,
+       )
+
+
 # In[ ]:
 
 
