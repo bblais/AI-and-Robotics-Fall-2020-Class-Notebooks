@@ -24,10 +24,14 @@ def build(robot):
     connect(left,right,'weld')  # revolves around the middle of the second object
 
 
-# In[4]:
+# In[10]:
 
 
+def bob(robot):
+    robot.message='hello'
+    
 def act(t,robot):
+    
     
     if t<1.5:
         robot['left'].F=10
@@ -36,10 +40,11 @@ def act(t,robot):
         robot['left'].F=0
         robot['right'].F=0
         
+    bob(robot)
     
 
 
-# In[5]:
+# In[11]:
 
 
 env=Environment(image='images/linepath1.jpeg',linearDamping=10) 

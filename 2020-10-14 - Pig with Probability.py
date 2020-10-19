@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[2]:
+# In[1]:
 
 
 from Game import *
@@ -23,33 +23,41 @@ from Game import *
 # 2. what is a state?  (how do we represent it, what are possibilities)
 #     - your current score, their current score, turn score
 
-# In[3]:
+# In[29]:
 
 
 def valid_moves(state,player):
     return ["roll","hold"]
 
 def initial_state():
-    # your current score, their current score, turn score
-    return [0,0,0]
-
-
-# In[4]:
-
-
-def show_state(state):
-    print("Player 1 score is ",state[0])
-    print("Player 2 score is ",state[1])
-    print("Turn score is ",state[2])    
+    # your current score, their current score, turn score, max_score, last die
+    return [0,0,0,101,0]
 
 
 # In[30]:
 
 
+def show_state(state):
+    
+    i,j,k,max_score,last_die=state
+    
+    if last_die==0:  # new turn
+        print("====")
+    else:
+        print("Rolled ",last_die)
+        
+    print("%d\t%d\t%d" % (i,j,k))
+    
+    print()
+    
+
+
+# In[31]:
+
+
 def win_status(state,player):
     
-    # playing until 101
-    max_score=101
+    max_score=state[3]
     
     if player==1:
         current_score=state[0]
@@ -66,7 +74,7 @@ def win_status(state,player):
     
 
 
-# In[31]:
+# In[32]:
 
 
 def update_state(state,player,move):
@@ -87,6 +95,8 @@ def update_state(state,player,move):
             new_state[1]+=state[2]  # add the turn score to player 1's current score
         
         new_state[2]=0  # reset the turn score
+        last_die=0
+        state[4]=last_die
         
     else:  #  roll
         dice=random.randint(1,6)
@@ -96,11 +106,13 @@ def update_state(state,player,move):
         else:
             new_state[2]+=dice
             
+        last_die=dice
+        state[4]=last_die
     
     return new_state
 
 
-# In[32]:
+# In[33]:
 
 
 def repeat_move(state,player,move):
@@ -113,7 +125,7 @@ def repeat_move(state,player,move):
     
 
 
-# In[33]:
+# In[34]:
 
 
 def human_move(state,player):
@@ -128,7 +140,7 @@ def human_move(state,player):
 human_agent=Agent(human_move)
 
 
-# In[34]:
+# In[35]:
 
 
 def random_move(state,player):
@@ -140,14 +152,15 @@ def random_move(state,player):
 random_agent=Agent(random_move)
 
 
-# In[35]:
+# In[36]:
 
 
-max_score=101
 saved_p={}
+saved_p_win_roll={}
+saved_p_win_hold={}
 saved_whether_roll={}
 
-def p_win(i,j,k):  # i = my score, j is the other score, k is the turn score
+def p_win(i,j,k,max_score=21):  # i = my score, j is the other score, k is the turn score
     
     if i+k>=max_score:
         return 1
@@ -156,49 +169,74 @@ def p_win(i,j,k):  # i = my score, j is the other score, k is the turn score
         return 0.0
     
     
-    if (i,j,k) in saved_p:
-        return saved_p[(i,j,k)]
+    if (i,j,k,max_score) in saved_p:
+        return saved_p[(i,j,k,max_score)]
     
 
     # if I roll a one
     #p_win_roll=1-(probability that I lose, handing it off to the other)
-    p_win_roll=1-p_win(j,i+1,0)
+    p_win_roll=1-p_win(j,i+1,0,max_score)
     
     # if I roll a two, three,
     for dice in [2,3,4,5,6]:  # range(2,6+1) is equal but unreadable
-        p_win_roll+=p_win(i,j,k+dice)
+        p_win_roll+=p_win(i,j,k+dice,max_score)
     
     p_win_roll/=6
     
     if k==0:  # add 1 even when the turn score is zero
-        p_win_hold=1-p_win(j,i+1,0)
+        p_win_hold=1-p_win(j,i+1,0,max_score)
     else:
-        p_win_hold=1-p_win(j,i+k,0)
+        p_win_hold=1-p_win(j,i+k,0,max_score)
 
         
     # assume that we are rational
     if p_win_roll>p_win_hold:
         p=p_win_roll
-        saved_whether_roll[(i,j,k)]=True
+        saved_whether_roll[(i,j,k,max_score)]=True
     else:
         p=p_win_hold
-        saved_whether_roll[(i,j,k)]=False
+        saved_whether_roll[(i,j,k,max_score)]=False
         
     
-    saved_p[(i,j,k)]=p
+    saved_p[(i,j,k,max_score)]=p
+    saved_p_win_roll[(i,j,k,max_score)]=p_win_roll
+    saved_p_win_hold[(i,j,k,max_score)]=p_win_hold
     
     return p
 
 
-# In[36]:
+# In[37]:
+
+
+i,j,k,max_score=(20,18,0,30)
+p=p_win(i,j,k,max_score)
+saved_p_win_roll[(i,j,k,max_score)],saved_p_win_hold[(i,j,k,max_score)]
+
+
+# In[38]:
+
+
+keys=list(saved_p_win_roll.keys())
+
+
+# In[39]:
+
+
+for i,key in enumerate(keys):
+    print(key,saved_p_win_roll[key])
+    if i>10:
+        break
+
+
+# In[40]:
 
 
 def probability_move(state,player):
     
-    i,j,k=state
+    i,j,k,max_score,last_die=state
     
-    p=p_win(i,j,k)
-    roll=saved_whether_roll[(i,j,k)]
+    p=p_win(i,j,k,max_score)
+    roll=saved_whether_roll[(i,j,k,max_score)]
     
     if roll:
         return "roll"
@@ -208,170 +246,21 @@ def probability_move(state,player):
 probability_agent=Agent(probability_move)
 
 
-# In[12]:
-
-
-from Game.minimax import *
-def minimax_move(state,player):
-
-    values,moves=minimax_values(state,player,display=False)
-    return top_choice(moves,values)
-
-
-minimax_agent=Agent(minimax_move)
-
-
-# In[13]:
-
-
-def skittles_move(state,player,info):
-    S=info.S
-    last_action=info.last_action
-    last_state=info.last_state
-    
-    
-    # if Ive never seen this state before
-    if not state in S:
-        actions=valid_moves(state,player)
-
-        S[state]=Table()
-        for action in actions:
-            S[state][action]=3     
-    
-    move=weighted_choice(S[state])  # weighted across actions
-    
-    # what if there are no skittles for a particular state?
-    # move is None in that case
-    
-    if move is None:
-        # learn a little bit
-        if last_state:
-            S[last_state][last_action]=S[last_state][last_action]-1
-            if S[last_state][last_action]<0:
-                S[last_state][last_action]=0
-        
-        move=random_move(state,player)
-    
-    return move
-
-def skittles_after(status,player,info):
-    S=info.S
-    last_action=info.last_action
-    last_state=info.last_state
-
-    if status=='lose':
-        # learn a little bit
-        S[last_state][last_action]=S[last_state][last_action]-1
-        if S[last_state][last_action]<0:
-            S[last_state][last_action]=0
-        
-    
-
-
-skittles_agent=Agent(skittles_move)
-skittles_agent.S=Table()
-skittles_agent.post=skittles_after
-
-
-skittles_agent2=Agent(skittles_move)
-skittles_agent2.S=Table()
-skittles_agent2.post=skittles_after
-
-
-# In[14]:
-
-
-def Q_move(state,player,info):
-    Q=info.Q
-    last_action=info.last_action
-    last_state=info.last_state
-    
-    α=info.α
-    γ=info.γ
-    ϵ=info.ϵ
-    
-
-    # if Ive never seen this state before
-    if not state in Q:
-        actions=valid_moves(state,player)
-
-        Q[state]=Table()
-        for action in actions:
-            Q[state][action]=0     
-    
-    # deal with random vs top choice here
-    if random.random()<ϵ:
-        move=random_move(state,player)  
-    else:
-        move=top_choice(Q[state]) 
-    
-    # what if there are no skittles for a particular state?
-    # move is None in that case
-    
-    if not last_action is None:  # not the first move
-        # learn a little bit
-        # change equation here
-        reward=0
-        
-        # Bellman equation
-        Q[last_state][last_action] += α*(reward+
-                         γ*max([Q[state][a] for a in Q[state]])  - 
-                                Q[last_state][last_action])
-    
-        
-    
-    return move
-
-def Q_after(status,player,info):
-    Q=info.Q
-    last_action=info.last_action
-    last_state=info.last_state
-
-    α=info.α
-    γ=info.γ
-    ϵ=info.ϵ
-    
-    if status=='lose':
-        reward=-1
-    elif status=='win':
-        reward=1
-    elif status=='stalemate':
-        reward=0.5
-    else:
-        reward=0
-        
-    # learn a little bit
-    Q[last_state][last_action] += α*(reward-Q[last_state][last_action])
-        
-
-
-# In[15]:
-
-
-Q1_agent=Agent(Q_move)
-Q1_agent.Q=LoadTable('Q1_Pig_data.json')
-Q1_agent.post=Q_after
-
-Q1_agent.α=0.3  # learning rate
-Q1_agent.γ=0.9  # memory constant, discount factor
-Q1_agent.ϵ=0.1  # probability of a random move during learning
-
-Q2_agent=Agent(Q_move)
-Q2_agent.Q=LoadTable('Q2_Pig_data.json')
-Q2_agent.post=Q_after
-
-Q2_agent.α=0.3  # learning rate
-Q2_agent.γ=0.9  # memory constant, discount factor
-Q2_agent.ϵ=0.1  # probability of a random move during learning
-
-
 # In[ ]:
 
 
 
 
 
-# In[40]:
+# In[41]:
+
+
+g=Game(number_of_games=1)
+g.display=True
+g.run(probability_agent,random_agent);
+
+
+# In[42]:
 
 
 g=Game(number_of_games=1000)
@@ -379,13 +268,13 @@ g.display=False
 g.run(probability_agent,random_agent);
 
 
-# In[41]:
+# In[43]:
 
 
 g.percent_win_lose_tie()
 
 
-# In[42]:
+# In[44]:
 
 
 def bob_move(state,player):
@@ -394,7 +283,7 @@ def bob_move(state,player):
 bob=Agent(bob_move)
 
 
-# In[43]:
+# In[91]:
 
 
 g=Game(number_of_games=1000)
@@ -402,7 +291,64 @@ g.display=False
 g.run(probability_agent,bob);
 
 
-# In[44]:
+# In[92]:
+
+
+g.percent_win_lose_tie()
+
+
+# For Bob to win, he has to roll non-1's up until the max_score.  What is the probability of doing that?
+
+# In[50]:
+
+
+101/2,101/6
+
+
+# if bob has to roll $n$ times, the probability of doing that (and not getting a 1) is $(5/6)^n$
+
+# In[51]:
+
+
+saved_p_win_hold[(0,0,0,101)]
+
+
+# In[54]:
+
+
+from numpy.random import randint
+
+
+# In[86]:
+
+
+count=0
+mx=1000
+for i in range(mx):
+    r=randint(6,size=50)+1
+    r[r==1]=-1e6
+    cs=r.cumsum()
+    if any(cs>=101):
+        count+=1
+        
+count/mx*100
+
+
+# In[90]:
+
+
+1-0.99**17
+
+
+# In[99]:
+
+
+g=Game(number_of_games=100)
+g.display=False
+g.run(bob,bob);
+
+
+# In[100]:
 
 
 g.percent_win_lose_tie()
