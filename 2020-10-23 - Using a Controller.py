@@ -13,7 +13,7 @@ get_ipython().magic('pylab inline')
 from RobotSim373 import *
 
 
-# In[12]:
+# In[3]:
 
 
 def build(robot):    
@@ -27,7 +27,7 @@ def build(robot):
     connect(right,center,'weld')  # revolves around the middle of the second object
 
 
-# In[13]:
+# In[4]:
 
 
 def turn_a_bit(t,robot):
@@ -84,7 +84,7 @@ def monitor(t,robot):
         robot.message=robot.controller.current_state
 
 
-# In[14]:
+# In[5]:
 
 
 stopwait=StateMachine(
@@ -104,7 +104,7 @@ state_machine=StateMachine(
     first_state='turn a bit')
 
 
-# In[15]:
+# In[6]:
 
 
 env=Environment(image='images/linepath1.jpeg',linearDamping=20) 
@@ -128,7 +128,7 @@ run_sim(env,robot.controller,
 
 # ## Adding another behavior
 
-# In[32]:
+# In[7]:
 
 
 def stop(t,robot):
@@ -151,14 +151,14 @@ def straighten(t,robot):
     return False
 
 
-# In[35]:
+# In[8]:
 
 
 stopwait=StateMachine(
     {
+    'forward':(forward,'straighten2'),
     'stop':(stop,'wait1'),
     'wait1':(wait(2),'forward'),
-    'forward':(forward,'straighten2'),
     'straighten2':([straighten,wait(2)],'stop')  # if either one exits with True, then the next state is done
     },
     first_state='stop')
@@ -170,7 +170,7 @@ state_machine=StateMachine(
     first_state='turn a bit')
 
 
-# In[36]:
+# In[9]:
 
 
 env=Environment(image='images/linepath1.jpeg',linearDamping=20) 

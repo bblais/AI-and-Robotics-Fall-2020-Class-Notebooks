@@ -41,7 +41,7 @@ def act(t,robot):
     robot['bob'].F=0.4
 
 
-# In[5]:
+# In[4]:
 
 
 env=Environment(24,24)  # size of the environment
@@ -73,7 +73,7 @@ run_sim(env,act,
 # 
 # You can also use the hex format '#c2a245', or a tuple of rgb  (0.3,0.5,0.9)
 
-# In[8]:
+# In[5]:
 
 
 env=Environment(24,24)  # size of the environment
@@ -98,7 +98,7 @@ run_sim(env,act,
        )
 
 
-# In[11]:
+# In[6]:
 
 
 env=Environment(24,24)  # size of the environment
