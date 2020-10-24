@@ -15,11 +15,11 @@ from Game import *
 # 2. turns alternate taking 1,2, or 3 sticks
 # 3. player taking last stick loses
 
-# In[2]:
+# In[7]:
 
 
 def initial_state():
-    return 21
+    return 25
 
 def show_state(state):
     print("There are ",state,"sticks.")
@@ -48,7 +48,7 @@ def win_status(state,player):
     # there is no stalemate
 
 
-# In[3]:
+# In[8]:
 
 
 def human_move(state,player):
@@ -59,7 +59,7 @@ def human_move(state,player):
 human_agent=Agent(human_move)
 
 
-# In[4]:
+# In[9]:
 
 
 def random_move(state,player):
@@ -69,7 +69,7 @@ def random_move(state,player):
 random_agent=Agent(random_move)
 
 
-# In[31]:
+# In[10]:
 
 
 from Game.minimax import *
@@ -82,7 +82,7 @@ def minimax_move(state,player):
 minimax_agent=Agent(minimax_move)
 
 
-# In[37]:
+# In[11]:
 
 
 def skittles_move(state,player,info):
@@ -226,15 +226,15 @@ S
 skittles_agent.S=Table()
 
 
-# In[53]:
+# In[26]:
 
 
-g=Game(100)
+g=Game(1000)
 g.display=False
-g.run(minimax_agent,skittles_agent);
+g.run(random_agent,skittles_agent);
 
 
-# In[54]:
+# In[27]:
 
 
 g.report()
@@ -246,16 +246,16 @@ g.report()
 skittles_agent.S
 
 
-# In[56]:
+# In[33]:
 
 
 SaveTable(skittles_agent.S,'nim skittles table.json')
 
 
-# In[ ]:
+# In[32]:
 
 
-
+sorted(list(skittles_agent.S.keys()))
 
 
 # In[57]:
