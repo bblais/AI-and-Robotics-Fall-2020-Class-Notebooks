@@ -181,25 +181,25 @@ x3[:,:,0]
 x3[:,:,0].shape
 
 
-# In[70]:
+# In[2]:
 
 
 im=imread('images/dogs.jpg')
 
 
-# In[71]:
+# In[3]:
 
 
 im.shape
 
 
-# In[72]:
+# In[4]:
 
 
 imshow(im)
 
 
-# In[73]:
+# In[5]:
 
 
 imshow(im[:,:,0],cmap=cm.gray)
@@ -226,7 +226,50 @@ colorbar()
 imshow(im)
 
 
-# In[77]:
+# In[10]:
+
+
+count=1
+width=370
+height=580
+
+starting_rc={
+    (0,0):(150,0)
+}
+offset_x=0
+offset+y=0
+
+for row in range(2):
+    for col in range(3):
+        
+        start_col=col*width+offset_x
+        end_col=(col+1)*width+offset_y
+        
+        start_row=row*height
+        end_row=(row+1)*height
+        
+        subimage=im[start_row:end_row,start_col:end_col,:]
+        
+        subplot(2,3,count)
+        imshow(subimage)
+        
+        
+        count+=1
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[6]:
 
 
 subimage = im[550:,400:820,:]

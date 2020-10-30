@@ -21,7 +21,7 @@ from classy import *
 ls ../data
 
 
-# In[32]:
+# In[4]:
 
 
 data=load_excel('../data/iris.xls')
@@ -72,31 +72,31 @@ print("On Training Set:",C.percent_correct(data_train.vectors,data_train.targets
 
 # ## Full Data Set in 4 dimensions
 
-# In[46]:
+# In[5]:
 
 
 data=load_excel('../data/iris.xls')
 
 
-# In[47]:
+# In[6]:
 
 
 C=NaiveBayes()
 
 
-# In[48]:
+# In[7]:
 
 
 data_train=data
 
 
-# In[49]:
+# In[8]:
 
 
 C.fit(data_train.vectors,data_train.targets)
 
 
-# In[50]:
+# In[9]:
 
 
 print("On Training Set:",C.percent_correct(data_train.vectors,data_train.targets))
@@ -120,13 +120,13 @@ C.fit(data_train.vectors,data_train.targets)
 print("On Training Set:",C.percent_correct(data_train.vectors,data_train.targets))
 
 
-# In[54]:
+# In[10]:
 
 
 data_train,data_test=split(data,test_size=0.2)
 
 
-# In[55]:
+# In[11]:
 
 
 C=NaiveBayes()
@@ -135,13 +135,25 @@ print("On Training Set:",C.percent_correct(data_train.vectors,data_train.targets
 print("On Test Set:",C.percent_correct(data_test.vectors,data_test.targets))
 
 
-# In[56]:
+# In[12]:
 
 
 C=kNearestNeighbor()
 C.fit(data_train.vectors,data_train.targets)
 print("On Training Set:",C.percent_correct(data_train.vectors,data_train.targets))
 print("On Test Set:",C.percent_correct(data_test.vectors,data_test.targets))
+
+
+# In[57]:
+
+
+get_ipython().magic('pinfo load_csv')
+
+
+# In[58]:
+
+
+load_csv('../data/krkopt.data')
 
 
 # In[ ]:
