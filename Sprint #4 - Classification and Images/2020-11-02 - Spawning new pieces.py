@@ -13,7 +13,7 @@ get_ipython().magic('pylab inline')
 from RobotSim373 import *
 
 
-# In[5]:
+# In[3]:
 
 
 def build(robot):    
@@ -34,7 +34,7 @@ def build(robot):
  
 
 
-# In[28]:
+# In[4]:
 
 
 def stop(t,robot):
@@ -80,14 +80,16 @@ def wait(dt):
     
 def spawn(t,robot):
     
-    b=Box(robot.env,x=5,y=robot['center'].y,width=.5,height=0.5)
+    robot.env -= "me"
+        
+    b=Box(robot.env,x=5,y=robot['center'].y,width=.5,height=0.5,name='me')
     b.F=2
     b.F_angle=(2*rand()-1)*90
     
     return True
 
 
-# In[30]:
+# In[5]:
 
 
 env=Environment(width=24,    # for consistency, manually set the environment size
