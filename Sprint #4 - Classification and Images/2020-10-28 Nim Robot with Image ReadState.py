@@ -277,7 +277,7 @@ print("On Test Set:",C.percent_correct(data_test.vectors,data_test.targets))
 
 # ### Train on all the data
 
-# In[23]:
+# In[26]:
 
 
 C.fit(data.vectors,data.targets)
@@ -285,7 +285,7 @@ C.fit(data.vectors,data.targets)
 
 # ### make a prediction
 
-# In[24]:
+# In[27]:
 
 
 im=imread('board.jpg')
@@ -295,7 +295,7 @@ vector=atleast_2d(square.ravel())
 C.predict(vector)
 
 
-# In[25]:
+# In[28]:
 
 
 square=get_square(im,2)
@@ -306,7 +306,7 @@ C.predict(vector)
 
 # ## Behaviors
 
-# In[26]:
+# In[29]:
 
 
 def stop(t,robot):
@@ -451,12 +451,16 @@ def read_state(t,robot):
     
     values=[]
     squares=[]
+    #board=Board(4,4)
     for i in range(21):
         square=get_square(im,i)
         vector=atleast_2d(square.ravel())
         value=C.predict(vector)[0]
         values.append(value)
         squares.append(square)
+        #board[r,c]=value
+        
+    #robot.state=board
         
     print(values)
     
@@ -473,13 +477,13 @@ def monitor(t,robot):
         robot.message+="(state %s,move %d taken %d)" % (str(robot.state),robot.move,robot.taken_count)
 
 
-# In[27]:
+# In[30]:
 
 
 read_state(0,robot)
 
 
-# In[28]:
+# In[31]:
 
 
 im=imread('board.jpg')
@@ -498,7 +502,7 @@ for i in range(20):
     title(value)
 
 
-# In[29]:
+# In[32]:
 
 
 take_sticks=StateMachine(
@@ -539,7 +543,7 @@ state_machine=StateMachine(
 
 # ## Try a read state and a move
 
-# In[30]:
+# In[33]:
 
 
 env=Environment(width=24,height=35,linearDamping=20) 
@@ -571,7 +575,7 @@ run_sim(env,robot.controller,
        )    
 
 
-# In[31]:
+# In[34]:
 
 
 for i,s in enumerate(robot.squares[:16]):
@@ -581,7 +585,7 @@ for i,s in enumerate(robot.squares[:16]):
 
 # ## Try a human move
 
-# In[32]:
+# In[35]:
 
 
 state=robot.state
@@ -590,7 +594,7 @@ player=2
 state=update_state(state,player,move)
 
 
-# In[38]:
+# In[36]:
 
 
 show_state(state)
@@ -602,7 +606,7 @@ if not move in valid_moves(state,player):
 
 # manually move the pieces
 
-# In[39]:
+# In[37]:
 
 
 for i in range(move):
@@ -622,7 +626,7 @@ run_sim(env,wait(4),
 
 # ## Try a another robot move
 
-# In[35]:
+# In[38]:
 
 
 robot.count=0
@@ -640,7 +644,7 @@ run_sim(env,robot.controller,
 
 # ## Putting it all together in a loop
 
-# In[36]:
+# In[39]:
 
 
 env=Environment(width=24,height=35,linearDamping=20) 
@@ -654,7 +658,7 @@ for i in range(N):
 
 
 
-# In[37]:
+# In[40]:
 
 
 while True:
