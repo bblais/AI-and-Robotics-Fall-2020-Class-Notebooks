@@ -45,6 +45,20 @@ get_ipython().system('pip install scikit-learn')
 get_ipython().system('pip install "git+git://github.com/bblais/classy" --upgrade')
 
 
+# ## Sprint #5
+
+# In[2]:
+
+
+get_ipython().system('pip install "git+git://github.com/bblais/NumpyNet" --upgrade')
+
+
+# In[3]:
+
+
+get_ipython().system('pip install tqdm')
+
+
 # In[ ]:
 
 
