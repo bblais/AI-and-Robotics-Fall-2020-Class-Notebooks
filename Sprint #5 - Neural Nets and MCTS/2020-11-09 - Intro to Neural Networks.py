@@ -63,66 +63,6 @@ print(("On Training Set:",C.percent_correct(data.vectors,data.targets)))
 plot2D(data,classifier=C,axis_range=[-.55,1.5,-.5,1.5])
 
 
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
 # # Backprop
 
 # In[50]:
