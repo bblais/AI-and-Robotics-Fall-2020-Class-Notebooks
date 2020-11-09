@@ -28,22 +28,28 @@ for i in range(100):
 imshow(im)
 
 
-# In[6]:
+# In[56]:
 
 
 images=image.load_images('test images/')
 
 
-# In[7]:
+# In[58]:
 
 
-data=image.images_to_vectors(images)
+data=image.images_to_vectors(images,verbose=False)
 
 
-# In[8]:
+# In[59]:
 
 
 data.vectors/=255
+
+
+# In[61]:
+
+
+summary(data)
 
 
 # In[9]:
