@@ -16,7 +16,7 @@ names={}
 names['Sprint #1']=list(pd.read_csv('data/Original Sprint #1 Scrum Kanban- Programming and Games.csv')['Name'])
 names['Sprint #2']=list(pd.read_csv('data/Original Sprint #2 Scrum Kanban - Learning and Simulation.csv')['Name'])
 names['Sprint #3']=list(pd.read_csv('data/Original Sprint #3 Scrum Kanban - Probability and Robot Tasks.csv')['Name'])
-#names['Sprint #4']=list(pd.read_csv('data/Original Sprint #4 Scrum Kanban - Classification and Images.csv')['Name'])
+names['Sprint #4']=list(pd.read_csv('data/Original Sprint #4 Scrum Kanban - Classification and Images.csv')['Name'])
 names
 
 
