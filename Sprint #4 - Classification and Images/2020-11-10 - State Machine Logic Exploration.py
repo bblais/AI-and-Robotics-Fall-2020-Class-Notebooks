@@ -227,6 +227,27 @@ run_sim(env,robot.controller,
        )    
 
 
+# In[79]:
+
+
+env=Environment(image='../images/linepath1.jpeg',width=24,linearDamping=20) 
+robot=Robot(env)
+build(robot)
+
+robot.controller=Controller(robot,state_machine)
+robot.controller.monitor=monitor
+
+Box(env,x=18,y=7,width=.5,height=0.5)
+
+run_sim(env,robot.controller,
+        total_time=250,  # seconds
+        dt=1/60,
+        dt_display=.5,  # make this larger for a faster display
+        figure_width=5,
+        plot_orientation=False,
+       )    
+
+
 # In[ ]:
 
 
