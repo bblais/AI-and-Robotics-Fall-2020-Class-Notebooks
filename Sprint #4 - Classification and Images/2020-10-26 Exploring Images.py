@@ -18,34 +18,70 @@ get_ipython().magic('pylab inline')
 #     then assign state[square]=category we detected
 # 5.  goal  e.g. state = [ 0 0 0 ; 0 1 0 ; 2 1 0]
 
-# In[9]:
+# In[2]:
 
 
 x1=rand(10)
 
 
-# In[10]:
+# In[3]:
 
 
 x1
 
 
-# In[11]:
+# In[4]:
 
 
 x1.shape
 
 
-# In[12]:
+# In[5]:
 
 
 x2=rand(3,5)
 
 
-# In[13]:
+# In[6]:
 
 
 x2
+
+
+# In[7]:
+
+
+x2[0,1]
+
+
+# In[8]:
+
+
+x2[0,1:4]
+
+
+# In[9]:
+
+
+list(range(1,4))
+
+
+# In[11]:
+
+
+x2[1:3,1:4]
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
 
 
 # In[14]:
@@ -181,19 +217,19 @@ x3[:,:,0]
 x3[:,:,0].shape
 
 
-# In[2]:
+# In[12]:
 
 
 im=imread('images/dogs.jpg')
 
 
-# In[3]:
+# In[13]:
 
 
 im.shape
 
 
-# In[4]:
+# In[14]:
 
 
 imshow(im)
@@ -226,18 +262,34 @@ colorbar()
 imshow(im)
 
 
-# In[10]:
+# In[15]:
+
+
+subimage=im[0:600,400:800,:]
+imshow(subimage)
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[16]:
 
 
 count=1
 width=370
 height=580
 
-starting_rc={
-    (0,0):(150,0)
-}
 offset_x=0
-offset+y=0
+offset_y=0
 
 for row in range(2):
     for col in range(3):
