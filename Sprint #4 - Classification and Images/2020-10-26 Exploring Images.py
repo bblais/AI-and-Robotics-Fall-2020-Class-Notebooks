@@ -217,19 +217,19 @@ x3[:,:,0]
 x3[:,:,0].shape
 
 
-# In[12]:
+# In[2]:
 
 
 im=imread('images/dogs.jpg')
 
 
-# In[13]:
+# In[3]:
 
 
 im.shape
 
 
-# In[14]:
+# In[4]:
 
 
 imshow(im)
@@ -262,7 +262,7 @@ colorbar()
 imshow(im)
 
 
-# In[15]:
+# In[5]:
 
 
 subimage=im[0:600,400:800,:]
@@ -281,7 +281,7 @@ imshow(subimage)
 
 
 
-# In[16]:
+# In[6]:
 
 
 count=1
@@ -309,16 +309,39 @@ for row in range(2):
         count+=1
 
 
-# In[ ]:
+# In[15]:
 
 
+def subsquare(im,r,c):
+
+    width=375
+    height=580
+
+    offset_x=100
+    offset_y=0
+
+    start_col=col*width+offset_x
+    end_col=(col+1)*width+offset_y
+
+    start_row=row*height
+    end_row=(row+1)*height
+
+    subimage=im[start_row:end_row,start_col:end_col,:]
+
+    return subimage
 
 
-
-# In[ ]:
-
+# In[16]:
 
 
+count=1
+for row in range(2):
+    for col in range(3):
+
+        subplot(2,3,count)
+        square=subsquare(im,row,col)
+        imshow(square)
+        count+=1
 
 
 # In[6]:

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[2]:
+# In[1]:
 
 
 from Game import *
@@ -9,7 +9,7 @@ from Game import *
 
 # ## Rules of the Game
 
-# In[3]:
+# In[2]:
 
 
 def initial_state():
@@ -79,7 +79,7 @@ def win_status(state,player):
 
 # ## Agents
 
-# In[4]:
+# In[3]:
 
 
 def human_move(state,player):
@@ -96,7 +96,7 @@ def human_move(state,player):
 human_agent=Agent(human_move)
 
 
-# In[5]:
+# In[4]:
 
 
 def random_move(state,player):
@@ -108,7 +108,7 @@ def random_move(state,player):
 random_agent=Agent(random_move)
 
 
-# In[6]:
+# In[5]:
 
 
 from Game.minimax import *
@@ -121,7 +121,7 @@ def minimax_move(state,player):
 minimax_agent=Agent(minimax_move)
 
 
-# In[7]:
+# In[6]:
 
 
 def skittles_move(state,player,info):
@@ -184,7 +184,7 @@ skittles_agent2.post=skittles_after
 
 
 
-# In[8]:
+# In[7]:
 
 
 g=Game()
